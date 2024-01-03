@@ -8,11 +8,29 @@ import Modal from './Modal/Modal';
 
 export default function App(params) {
   const [itemImg, setItemImg] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [searchNameImg, setSearchNameImg] = useState('');
-  const [isLoading, setIsLoding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [imgData, setImgData] = useState('');
+  useEffect(() => {
+    const loadImg = async () => {
+      try {
+        if (currentPage !== 0) {
+          setIsLoading(true);
+          const response = await fetchImages(searchNameImg, currentPage);
+          console.log(response);
+          setItemImg(prevState => {
+            return [...prevState, ...response.hits];
+          });
+        }
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadImg();
+  }, [currentPage]);
 
   const addStateImg = async searchName => {
     try {
@@ -24,14 +42,14 @@ export default function App(params) {
         return;
       }
       // Сброс currentPage перед новым поиском
-      setIsLoding(true);
+      setIsLoading(true);
       setCurrentPage(1);
 
       const getImages = await fetchImages(searchName);
 
       setItemImg(getImages.hits);
       setSearchNameImg(searchName);
-      setIsLoding(false);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +58,7 @@ export default function App(params) {
   const toggaleModal = e => {
     setShowModal(!showModal);
 
-    getImgDate(e);
+    getImgDate(e.target);
   };
 
   const getImgDate = data => {
@@ -49,7 +67,7 @@ export default function App(params) {
 
   const loadMore = async () => {
     setCurrentPage(prevState => prevState + 1);
-    // setIsLoding(true); // Устанавливаем isLoading в true перед загрузкой следующей страницы
+    // setIsLoading(true); // Устанавливаем isLoading в true перед загрузкой следующей страницы
   };
 
   return (

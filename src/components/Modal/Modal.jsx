@@ -14,7 +14,7 @@ class Modal extends Component {
   }
 
   hendleKeyDown = e => {
-    const { onClose } = this.props;
+    let { onClose } = this.props;
 
     if (e.code === 'Escape') {
       onClose();
@@ -22,7 +22,7 @@ class Modal extends Component {
   };
 
   hendleBackdropClick = event => {
-    const { onClose } = this.props;
+    let { onClose } = this.props;
 
     if (event.currentTarget === event.target) {
       onClose();
@@ -30,14 +30,13 @@ class Modal extends Component {
   };
 
   render() {
-    const { imgData } = this.props;
-    console.log(imgData);
-    const { src, alt } = imgData.target;
+    let { imgData } = this.props;
+    console.log(imgData.src);
 
     return createPortal(
       <div className={css.overlay} onClick={this.hendleBackdropClick}>
         <div className={css.modal}>
-          <img src={src} alt={alt} />
+          <img src={imgData.src} alt={imgData.alt} />
         </div>
       </div>,
       modalRoot
