@@ -30,7 +30,7 @@ export default function App(params) {
       }
     };
     loadImg();
-  }, [currentPage]);
+  }, [currentPage, searchNameImg]);
 
   const addStateImg = async searchName => {
     try {
